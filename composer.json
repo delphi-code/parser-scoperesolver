@@ -9,6 +9,7 @@
         }
     ],
     "require": {
+        "delphi/parserutils": "dev-main",
         "delphi/parser-fileresolver": "dev-main",
         "nikic/php-parser": "^4"
     },
