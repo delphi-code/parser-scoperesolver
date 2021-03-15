@@ -119,6 +119,7 @@ class ScopeResolver extends NodeVisitorAbstract
 
         if ($node instanceof Node\Stmt\Class_) {
             $scope = new Scope('Class', $node, $currentScope);
+            $scope->addVariable('this', $node);
             $this->scopeStack->push($scope);
             $node->setAttribute(self::ATTRIBUTE_KEY, $scope);
             return;
@@ -133,6 +134,7 @@ class ScopeResolver extends NodeVisitorAbstract
 
         if ($node instanceof Node\Stmt\Trait_) {
             $scope = new Scope('Trait', $node, $currentScope);
+            $scope->addVariable('this', $node);
             $this->scopeStack->push($scope);
             $node->setAttribute(self::ATTRIBUTE_KEY, $scope);
             return;
@@ -140,6 +142,8 @@ class ScopeResolver extends NodeVisitorAbstract
 
         if ($node instanceof Node\Stmt\ClassMethod) {
             $scope = new Scope('Method', $node, $currentScope);
+            $scope->addVariable('this', $currentScope->getVariable('this'));
+
             // TODO: Inherit properties from class scope
             foreach ($node->getParams() as $param) {
                 $scope->addVariable($param->var->name, $param);
