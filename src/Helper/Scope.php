@@ -37,7 +37,7 @@ class Scope
     public function getAttribute($name)
     {
         if (!array_key_exists($name, $this->attributes)) {
-            xdebug_break();
+            throw new Exception($name . ' was not set on node');
         }
         return $this->attributes[$name];
     }
@@ -66,7 +66,7 @@ class Scope
     public function getVariable(string $name)
     {
         if (!isset($this->variables[$name])) {
-            throw new Exception('Variable ' . $name . ' has not been defined in scope');
+            throw new Exception(sprintf('Variable "%s" has not been defined in scope', $name));
         }
         return $this->variables[$name];
     }
