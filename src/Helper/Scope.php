@@ -2,6 +2,7 @@
 
 namespace delphi\Parser\Scope\Helper;
 
+use delphi\Parser\Scope\Helper\Exception\UndefinedVariable;
 use Exception;
 use PhpParser\Node;
 
@@ -66,7 +67,7 @@ class Scope
     public function getVariable(string $name)
     {
         if (!isset($this->variables[$name])) {
-            throw new Exception(sprintf('Variable "%s" has not been defined in scope', $name));
+            throw new UndefinedVariable($name);
         }
         return $this->variables[$name];
     }
