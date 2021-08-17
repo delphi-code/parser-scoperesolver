@@ -20,10 +20,9 @@ class Scope
     /** @var Node */
     protected $definingNode;
 
-    /** @var Scope */
-    protected $parentScope;
+    protected ?Scope $parentScope;
 
-    public function __construct($name, $definingNode, $parentScope = null)
+    public function __construct($name, $definingNode, Scope $parentScope = null)
     {
         $this->name         = $name;
         $this->definingNode = $definingNode;
@@ -40,7 +39,7 @@ class Scope
         return $this->definingNode;
     }
 
-    public function getParentScope(): Scope
+    public function getParentScope(): ?Scope
     {
         return $this->parentScope;
     }
