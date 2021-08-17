@@ -46,7 +46,7 @@ class Scope
 
     public function getVariable(string $name)
     {
-        if (!isset($this->variables[$name])) {
+        if (!array_key_exists($name, $this->variables)) {
             throw new UndefinedVariable($name);
         }
         return $this->variables[$name];
