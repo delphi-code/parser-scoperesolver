@@ -86,6 +86,7 @@ class ScopeResolver extends NodeVisitorAbstract
         if ($node instanceof Node\Stmt\Unset_) {
             foreach ($node->vars as $var) {
                 if ($var instanceof ArrayDimFetch) {
+                    // TODO Not sure how to handle scope for arrays
                     continue;
                 }
                 $currentScope->removeVariable($var->name);
