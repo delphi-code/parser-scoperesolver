@@ -55,15 +55,6 @@ class ScopeResolver extends NodeVisitorAbstract
                 return;
             }
 
-            if ($node->var instanceof Node\Expr\List_) {
-                foreach ($node->var->items as $item) {
-                    // TODO: Handle destructuring better
-                    /** @var Node\Expr\ArrayItem $item */
-                    $currentScope->addVariable($item->value->name, $node->expr);
-                }
-                return;
-            }
-
             if ($node->var instanceof Node\Expr\Array_) {
                 // TODO: Unsure about what this means
                 return;
