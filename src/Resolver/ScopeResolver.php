@@ -28,15 +28,9 @@ class ScopeResolver extends NodeVisitorAbstract
         File::class,
     ];
 
-    /**
-     * @var Scope
-     */
-    protected $globalScope;
+    protected Scope $globalScope;
 
-    /**
-     * @var SplStack
-     */
-    protected $scopeStack;
+    protected SplStack $scopeStack;
 
     public function __construct()
     {
@@ -81,7 +75,8 @@ class ScopeResolver extends NodeVisitorAbstract
 
             if ($node->var->name instanceof Node\Scalar\String_) {
                 $varName = $node->var->name->value;
-            } else {
+            }
+            else {
                 $varName = (string) $node->var->name;
             }
             $currentScope->addVariable($varName, $node->expr);
@@ -117,24 +112,24 @@ class ScopeResolver extends NodeVisitorAbstract
             return;
         }
 
-        if ($node instanceof Node\Stmt\Class_) {
-            $scope = new Scope('Class', $node, $currentScope);
-            $scope->addVariable('this', $node);
-            $this->scopeStack->push($scope);
-            $node->setAttribute(self::ATTRIBUTE_KEY, $scope);
-            return;
-        }
+        if ($node instanceof Node\Stmt\ClassLike) {
+            $scopeName = 'ClassLike';
+            if ($node instanceof Node\Stmt\Class_) {
+                $scopeName = 'Class';
+            }
+            elseif ($node instanceof Node\Stmt\Trait_) {
+                $scopeName = 'Trait';
+            }
+            elseif ($node instanceof Node\Stmt\Interface_) {
+                $scopeName = 'Interface';
+            }
 
-        if ($node instanceof Node\Stmt\Interface_) {
-            $scope = new Scope('Interface', $node, $currentScope);
-            $this->scopeStack->push($scope);
-            $node->setAttribute(self::ATTRIBUTE_KEY, $scope);
-            return;
-        }
+            $scope = new Scope($scopeName, $node, $currentScope);
 
-        if ($node instanceof Node\Stmt\Trait_) {
-            $scope = new Scope('Trait', $node, $currentScope);
-            $scope->addVariable('this', $node);
+            if (!($node instanceof Node\Stmt\Interface_)) {
+                $scope->addVariable('this', $node);
+            }
+
             $this->scopeStack->push($scope);
             $node->setAttribute(self::ATTRIBUTE_KEY, $scope);
             return;
