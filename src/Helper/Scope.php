@@ -3,11 +3,14 @@
 namespace delphi\Parser\Scope\Helper;
 
 use delphi\Parser\Scope\Helper\Exception\UndefinedVariable;
+use delphi\ParserUtils\Traits\UseAttributes;
 use Exception;
 use PhpParser\Node;
 
 class Scope
 {
+    use UseAttributes;
+
     /** @var array */
     protected $variables = [];
 
@@ -16,9 +19,6 @@ class Scope
 
     /** @var Node */
     protected $definingNode;
-
-    /** @var array */
-    protected $attributes = [];
 
     /** @var Scope */
     protected $parentScope;
@@ -33,25 +33,6 @@ class Scope
     public function addVariable($name, $stmt)
     {
         $this->variables[$name] = $stmt;
-    }
-
-    public function getAttribute($name)
-    {
-        if (!array_key_exists($name, $this->attributes)) {
-            throw new Exception($name . ' was not set on node');
-        }
-        return $this->attributes[$name];
-    }
-
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
-
-    public function setAttributes(array $attributes): self
-    {
-        $this->attributes = array_merge($this->attributes, $attributes);
-        return $this;
     }
 
     public function getDefiningNode()
@@ -80,12 +61,6 @@ class Scope
     public function hasVariable(string $name): bool
     {
         return isset($this->variables[$name]);
-    }
-
-    public function setAttribute($name, $value): self
-    {
-        $this->attributes[$name] = $value;
-        return $this;
     }
 
     public function __toString()
